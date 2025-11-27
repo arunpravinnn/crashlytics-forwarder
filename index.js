@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 const app = express();
 app.use(express.json());
 
-const WEBHOOK_URL = "YOUR_CLIQ_WEBHOOK_URL_HERE";
+const WEBHOOK_URL = "https://cliq.zoho.in/api/v2/channelsbyname/undefined/message?zapikey=1001.aa68769fa1309d6a65cf9950486e8a86.ee4b3395450c6881c54ce4b392a3850d";
 
 app.post("/", async (req, res) => {
   console.log("Received Crashlytics event:");
