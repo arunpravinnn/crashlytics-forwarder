@@ -8,7 +8,7 @@ app.use(express.json());
 let crashHistory = [];
 
 // Your Zoho channel webhook
-const WEBHOOK_URL = "https://cliq.zoho.in/api/v2/channelsbyname/undefined/message?zapikey=1001.aa68769fa1309d6a65cf9950486e8a86.ee4b3395450c6881c54ce4b392a3850d";
+const WEBHOOK_URL = "https://cliq.zoho.in/api/v2/bots/firebasecrashlytics/message?zapikey=1001.aa68769fa1309d6a65cf9950486e8a86.ee4b3395450c6881c54ce4b392a3850d";
 
 // -----------------------------
 // RECEIVE FIREBASE ALERTS HERE
