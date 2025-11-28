@@ -4,41 +4,54 @@ import fetch from "node-fetch";
 const app = express();
 app.use(express.json());
 
+// Memory store for last 10 alerts
+let crashHistory = [];
 
-const WEBHOOK_URL =
-  "https://cliq.zoho.in/api/v2/bots/firebasecrashlytics/message?zapikey=1001.aa68769fa1309d6a65cf9950486e8a86.ee4b3395450c6881c54ce4b392a3850d";
+// Your Zoho channel webhook
+const WEBHOOK_URL = "https://cliq.zoho.in/api/v2/channelsbyname/undefined/message?zapikey=1001.aa68769fa1309d6a65cf9950486e8a86.ee4b3395450c6881c54ce4b392a3850d";
 
+// -----------------------------
+// RECEIVE FIREBASE ALERTS HERE
+// -----------------------------
 app.post("/", async (req, res) => {
   console.log("Received Crashlytics event:");
   console.log(JSON.stringify(req.body, null, 2));
 
-  const payload = req.body.payload?.issue;
+  try {
+    // Push alert to memory
+    crashHistory.unshift(req.body);
+    crashHistory = crashHistory.slice(0, 10); // keep last 10 alerts
 
-  const message = {
-    text:
+    // Prepare message for Zoho
+    const issue = req.body.payload?.issue;
+    const msgText =
       "**🔥 Crashlytics Alert**\n\n" +
-      "**Issue:** " + (payload?.title ?? "Unknown title") + "\n" +
-      "**Subtitle:** " + (payload?.subtitle ?? "") + "\n" +
-      "**App Version:** " + (payload?.appVersion ?? "N/A") + "\n" +
-      "**New Issue:** " + (payload?.isNewIssue ? "Yes" : "No"),
-  };
+      `**Issue:** ${issue?.title || "Unknown"}\n\n` +
+      `**Subtitle:** ${issue?.subtitle || "None"}\n\n` +
+      `**App Version:** ${issue?.appVersion || "N/A"}`;
 
-  console.log("Sending to Cliq bot...");
+    await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: msgText }),
+    });
 
-  const response = await fetch(WEBHOOK_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(message),
-  });
-
-  const text = await response.text();
-  console.log("Cliq response:", response.status, text);
-
-  res.status(200).send("OK");
+    res.status(200).send("OK");
+  } catch (err) {
+    console.error("Error handling alert:", err);
+    res.status(500).send("Error");
+  }
 });
 
+// -----------------------------
+// GET LATEST ALERTS
+// -----------------------------
+app.get("/api/latest", (req, res) => {
+  res.json({ items: crashHistory });
+});
+
+// -----------------------------
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Crashlytics forwarder running on port ${PORT}`);
 });
-
