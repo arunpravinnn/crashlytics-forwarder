@@ -27,11 +27,11 @@ app.post("/", async (req, res) => {
     const issue = req.body.payload?.issue;
 
     const msgText =
-      "**🔥 Crashlytics Alert**\n\n" +
-      `**Issue:** ${issue?.title || "Unknown"}\n\n` +
-      `**Subtitle:** ${issue?.subtitle || "None"}\n\n` +
-      `**App Version:** ${issue?.appVersion || "N/A"}\n\n` +
-      `**Issue ID:** \`${issue?.id || "N/A"}\``;
+      "*🔥 Crashlytics Alert*\n\n" +
+      `*Issue:* ${issue?.title || "Unknown"}\n\n` +
+      `*Subtitle:* ${issue?.subtitle || "None"}\n\n` +
+      `*App Version:* ${issue?.appVersion || "N/A"}\n\n` +
+      `*Issue ID:* \`${issue?.id || "N/A"}\``;
 
     // Send to Zoho
     await fetch(WEBHOOK_URL, {
