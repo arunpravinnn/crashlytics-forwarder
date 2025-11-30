@@ -82,7 +82,7 @@ app.get("/api/issue/:id", (req, res) => {
   const formatted =
     `🔥 *Crashlytics Issue Details*\n\n` +
     `*Title:* ${foundIssue.title}\n` +
-    `*Subtitle:* ${foundIssue.subtitle}\n` +
+    `*Subtile:* ${foundIssue.subtitle}\n` +
     `*Version:* ${foundIssue.appVersion}\n` +
     `*Issue ID:* \`${foundIssue.id}\`\n`;
 
